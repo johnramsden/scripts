@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# Input is what I want to boot
+nextboot="${1}"
+
+# Default to config /mnt/efi/loader/loader.conf if no second param given
+loaderfile=${2:-/mnt/efi/loader/loader.conf}
+
+# Default to /mnt/efi/loader/entries/
+def_entry=${3:-/mnt/efi/loader/entries/}
+entries=(${def_entry}*)
+
+match='0'
+
+echo "###### Current config: ######"
+cat ${loaderfile}
+echo
+# Set lastboot to second word from first line
+lastboot=$(awk 'NR==1{ print $2 }' ${loaderfile})
+
+echo "Setting next boot from ${lastboot} to ${nextboot}"
+
+if [ -f ${loaderfile} ]; then
+  echo "Comparing boot selection: ${nextboot} with existing entries"
+  for i in "${entries[@]}"; do
+    # Removing extension from entry using parameter expansion
+    entry=$(basename "${i%%.*}")
+    echo
+    echo "Looking for match with ${entry}"
+
+    if [ ${nextboot} == ${entry} ]; then
+      echo "Found matching boot config ${entry}"
+      # Replace old boot entry with nextboot
+      sed -i "1s/${lastboot}/${nextboot}/" ${loaderfile}
+      match='1'
+      break
+    else
+      echo "${nextboot} is not a match with config ${entry}"
+    fi
+  done
+else
+  echo "${loaderfile} does not exist."
+fi
+
+if [ ${match} == '0' ]; then
+  echo "ERROR: No match found"
+else
+  echo
+  echo "###### Changed config: ######"
+  cat ${loaderfile}
+fi

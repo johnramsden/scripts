@@ -1,6 +1,9 @@
 *
+!/.gitignore.d
+!/.gitignore.d/scripts
 !/.local
 !/.local/bin
+!/.local/bin/quickcrypt
 !/.local/bin/replace-and-reboot
 !/.local/bin/replaceboot
 !/.local/bin/screenshot

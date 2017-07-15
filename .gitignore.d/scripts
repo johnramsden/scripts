@@ -1,0 +1,10 @@
+*
+!/.local
+!/.local/bin
+!/.local/bin/replace-and-reboot
+!/.local/bin/replaceboot
+!/.local/bin/screenshot
+!/.local/bin/startvm
+!/.local/share
+!/.local/share/applications
+!/.local/share/applications/kit.desktop

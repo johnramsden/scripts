@@ -5,5 +5,6 @@
 !/.local/bin/replaceboot
 !/.local/bin/screenshot
 !/.local/bin/startvm
+!/.local/scripts/shellec/shellec
 !/.local/share/applications/kit.desktop
 !/.local/share/icons/hicolor/512x512/apps/gitkraken.png

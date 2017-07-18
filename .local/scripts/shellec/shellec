@@ -1,0 +1,96 @@
+#!/bin/sh
+
+# shellec v1.0
+# John Ramsden, 2017
+
+# Shell script using ffmpeg to convert a series of clips from a lecture into
+# a single video with an intro showing the name of the lecture and the name of the class.
+
+intro_length="10"
+class_name_start="1"
+class_name_end="4"
+lecture_name_start="6"
+lecture_name_end="9"
+font_file="/usr/share/fonts/TTF/WorkSans-Bold.ttf"
+
+lecture_name="'""${1}""'"
+class_name="'""${2}""'"
+
+name="${2} ${1}"
+
+background="${3}"
+
+# directory containing named videos
+video_dir="${4}"
+
+# Specify outputpath
+output_path="${5}"
+
+class_drawtext="enable=""'""between(t,${class_name_start},${class_name_end})""'"""
+lecture_drawtext="enable=""'""between(t,${lecture_name_start},${lecture_name_end})""'"""
+
+videos=`ls -1 ${video_dir} | sort -n -k1.2`
+vidnum=`ls -1 ${video_dir} | wc -l` # Count files
+
+echo "##########################################"
+echo "Shell ffmpeg Lecture Script"
+echo "${vidnum} videos sourced from ${video_dir}:"
+echo "${videos}"
+echo "##########################################"
+
+# Add intro
+vidnum=`expr ${vidnum} + 1`
+
+video_input=""
+filter=""
+
+# Setup videos in string
+input_videos(){
+count=1
+for video in $@; do
+  echo "Adding ${video}"
+  video_input="${video_input} -i ${video_dir}/${video}"
+  filter="${filter}[${count}:v:0][${count}:a:0]"
+   count=`expr ${count} + 1`
+done
+echo "Input video: ${video_input}"
+echo "Input filter: ${filter}"
+}
+
+run_build(){
+  echo "Starting ffmpeg"
+  # Create background
+  ffmpeg -loop 1 -i ${background} \
+    -c:v libx264 -t ${intro_length} -pix_fmt yuvj444p  -f mpegts intermediate1.ts && \
+  # Create intro with silent audio "-f lavfi -i aevalsrc=0 -i"
+  ffmpeg -f lavfi -i aevalsrc=0 -i intermediate1.ts -filter_complex \
+      "drawtext=${class_drawtext}: \
+      fontfile=${font_file}: \
+      text=${class_name}: fontcolor=white: fontsize=148: box=1: boxcolor=black@0.5: \
+      boxborderw=25: x=(w-text_w)/2:
+      \ y=(h-text_h)/2[firsttitle];[firsttitle]drawtext=${lecture_drawtext}: \
+      fontfile=/usr/share/fonts/TTF/WorkSans-Bold.ttf: text=${lecture_name}: \
+      fontcolor=white: fontsize=148: box=1: boxcolor=black@0.5: boxborderw=25:
+      \ x=(w-text_w)/2: y=(h-text_h)/2" \
+      -codec:a copy -acodec aac -shortest intro_output.mp4 && \
+
+  # Concat video
+  ffmpeg -i intro_output.mp4 \
+    ${video_input[@]} \
+    -filter_complex "[0:v:0][0:a:0]${filter}concat=n=${vidnum}:v=1:a=1[v][a]" \
+    -map "[v]" -map "[a]" \
+    "${name}.mp4"
+
+  rm intermediate1.ts intro_output.mp4
+}
+
+input_videos ${videos}
+run_build
+mv "${name}.mp4" "${output_path}"
+
+echo
+echo "##########################################"
+echo "Completed ${name}"
+echo "Videos sourced from ${video_dir}"
+echo "File located at: ${output_path}"
+echo "##########################################"

@@ -1,13 +1,9 @@
 *
-!/.gitignore.d
 !/.gitignore.d/scripts
-!/.local
-!/.local/bin
 !/.local/bin/quickcrypt
 !/.local/bin/replace-and-reboot
 !/.local/bin/replaceboot
 !/.local/bin/screenshot
 !/.local/bin/startvm
-!/.local/share
-!/.local/share/applications
 !/.local/share/applications/kit.desktop
+!/.local/share/icons/hicolor/512x512/apps/gitkraken.png

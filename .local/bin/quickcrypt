@@ -23,14 +23,14 @@ exit_message(){
   echo "gpg --output ${ARCHIVE_FILES}.tar --decrypt ${ARCHIVE_FILES}.tar.gpg"
 }
 
-verbose="false"
-RECIPIENT_PUBKEY=0
-ARCHIVE_FILES=0
+VERBOSE="false"
+RECIPIENT_PUBKEY="false"
+ARCHIVE_FILES="false"
 
 while getopts ":vr:f:" opt; do
   case $opt in
     v)
-      verbose="true"
+      VERBOSE="true"
       ;;
     r)
       RECIPIENT_PUBKEY=${OPTARG}
@@ -44,18 +44,18 @@ while getopts ":vr:f:" opt; do
   esac
 done
 
-if [ ${RECIPIENT_PUBKEY} -eq 0 ]; then
+if [[ ${RECIPIENT_PUBKEY} == "false" ]]; then
   echo "ERROR: Please input a public key." 1>&2
   exit 1
 fi
-if [ ${ARCHIVE_FILES} -eq 0 ]; then
+if [[ ${ARCHIVE_FILES}  == "false" ]]; then
   echo "ERROR: Please input a target to encrypt." 1>&2
   exit 1
 fi
 
-[[ "${verbose}" == "true" ]] && intro_message
+[[ "${VERBOSE}" == "true" ]] && intro_message
 
-if [[ "${verbose}" == "true" ]]; then
+if [[ "${VERBOSE}" == "true" ]]; then
   echo
   echo "Archiving target: ${ARCHIVE_FILES}"
   echo
@@ -66,7 +66,7 @@ fi
 
 if [ $? -eq 0 ]; then
 
-  if [[ "${verbose}" == "true" ]]; then
+  if [[ "${VERBOSE}" == "true" ]]; then
     echo
     echo "Taking a sha256sum hash so that the contents of the file"
     echo "can be verified later."
@@ -74,7 +74,7 @@ if [ $? -eq 0 ]; then
 
   sha256sum "${ARCHIVE_FILES}.tar" > "${ARCHIVE_FILES}.tar.sha256sum"
 
-  if [[ "${verbose}" == "true" ]]; then
+  if [[ "${VERBOSE}" == "true" ]]; then
     echo
     echo "Encrypting ${ARCHIVE_FILES}.tar for ${RECIPIENT_PUBKEY}."
   fi
@@ -83,11 +83,11 @@ if [ $? -eq 0 ]; then
 
   if [ $? -eq 0 ]; then
 
-    [[ "${verbose}" == "true" ]] && echo "Removing archive: ${ARCHIVE_FILES}.tar"
+    [[ "${VERBOSE}" == "true" ]] && echo "Removing archive: ${ARCHIVE_FILES}.tar"
 
     rm -rf "${ARCHIVE_FILES}.tar"
 
-    [[ "${verbose}" == "true" ]] && exit_message
+    [[ "${VERBOSE}" == "true" ]] && exit_message
 
     exit 0
 

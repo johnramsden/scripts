@@ -6,6 +6,11 @@
 !/.local/bin/screenshot
 !/.local/bin/shellec
 !/.local/bin/startvm
+!/.local/scripts/quickcrypt/quickcrypt
+!/.local/scripts/replace-and-reboot
+!/.local/scripts/replaceboot
+!/.local/scripts/screenshot
 !/.local/scripts/shellec/shellec
+!/.local/scripts/startvm
 !/.local/share/applications/kit.desktop
 !/.local/share/icons/hicolor/512x512/apps/gitkraken.png

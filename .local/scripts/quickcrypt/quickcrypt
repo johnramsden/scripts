@@ -1,0 +1,102 @@
+#!/bin/sh
+
+# Written by John Ramsden, 2017 < johnramsden [at] riseup [dot] net >
+
+# quickcrypt:
+# Simple gpg encryption script for encrypting archives with asymmetric GPG encryption.
+# the script requires a GPG key, a recipient's UID, and a directory or target to archive and encrypt.
+
+# USAGE: quickcrypt [-v] -r <recipient public key> -f <files to archive>
+
+intro_message(){
+  echo "Running quickcrypt"
+  echo "USAGE: quickcrypt <recipient public key> <files to archive>"
+}
+
+exit_message(){
+  echo
+  echo "Encryption completed."
+  echo
+  echo "To decrypt the files, with the recipient's key in the key ring run:"
+  echo
+  echo "gpg --output ${ARCHIVE_FILES}.tar --decrypt ${ARCHIVE_FILES}.tar.gpg"
+}
+
+VERBOSE="false"
+RECIPIENT_PUBKEY="false"
+ARCHIVE_FILES="false"
+
+while getopts ":vr:f:" opt; do
+  case $opt in
+    v)
+      VERBOSE="true"
+      ;;
+    r)
+      RECIPIENT_PUBKEY=${OPTARG}
+      ;;
+    f)
+      ARCHIVE_FILES=${OPTARG}
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      ;;
+  esac
+done
+
+if [[ ${RECIPIENT_PUBKEY} == "false" ]]; then
+  echo "ERROR: Please input a public key." 1>&2
+  exit 1
+fi
+if [[ ${ARCHIVE_FILES}  == "false" ]]; then
+  echo "ERROR: Please input a target to encrypt." 1>&2
+  exit 1
+fi
+
+[[ "${VERBOSE}" == "true" ]] && intro_message
+
+if [[ "${VERBOSE}" == "true" ]]; then
+  echo
+  echo "Archiving target: ${ARCHIVE_FILES}"
+  echo
+  tar -cvf "${ARCHIVE_FILES}.tar" "${ARCHIVE_FILES}"
+else
+  tar -cf "${ARCHIVE_FILES}.tar" "${ARCHIVE_FILES}"
+fi
+
+if [ $? -eq 0 ]; then
+
+  if [[ "${VERBOSE}" == "true" ]]; then
+    echo
+    echo "Taking a sha256sum hash so that the contents of the file"
+    echo "can be verified later."
+  fi
+
+  sha256sum "${ARCHIVE_FILES}.tar" > "${ARCHIVE_FILES}.tar.sha256sum"
+
+  if [[ "${VERBOSE}" == "true" ]]; then
+    echo
+    echo "Encrypting ${ARCHIVE_FILES}.tar for ${RECIPIENT_PUBKEY}."
+  fi
+
+  gpg --recipient ${RECIPIENT_PUBKEY} --encrypt "${ARCHIVE_FILES}.tar"
+
+  if [ $? -eq 0 ]; then
+
+    [[ "${VERBOSE}" == "true" ]] && echo "Removing archive: ${ARCHIVE_FILES}.tar"
+
+    rm -rf "${ARCHIVE_FILES}.tar"
+
+    [[ "${VERBOSE}" == "true" ]] && exit_message
+
+    exit 0
+
+  else
+    # Send error to stderr
+    echo "ERROR: Encryption failed." 1>&2
+    exit 1
+  fi
+
+else
+    echo "ERROR: Failed to create archive." 1>&2
+    exit 1
+fi

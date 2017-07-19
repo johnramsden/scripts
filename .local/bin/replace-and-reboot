@@ -1,4 +1,4 @@
 #!/bin/sh
 
 echo "Rebooting ${1}"
-/home/john/.local/bin/replaceboot ${1} && systemctl reboot
+replaceboot ${1} && systemctl reboot

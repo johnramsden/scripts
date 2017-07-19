@@ -4,6 +4,7 @@
 !/.local/bin/replace-and-reboot
 !/.local/bin/replaceboot
 !/.local/bin/screenshot
+!/.local/bin/shellec
 !/.local/bin/startvm
 !/.local/scripts/shellec/shellec
 !/.local/share/applications/kit.desktop

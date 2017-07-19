@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# John Ramsden, 2017
+# Change the default boot option in systemd-boot
 
 # Input is what I want to boot
 nextboot="${1}"

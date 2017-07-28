@@ -1,11 +1,10 @@
 *
 !/.gitignore.d/scripts
+!/.local/bin/createtag
 !/.local/bin/quickcrypt
-!/.local/bin/replace-and-reboot
-!/.local/bin/replaceboot
-!/.local/bin/screenshot
 !/.local/bin/shellec
 !/.local/bin/startvm
+!/.local/scripts/createtag
 !/.local/scripts/quickcrypt/quickcrypt
 !/.local/scripts/replace-and-reboot
 !/.local/scripts/replaceboot

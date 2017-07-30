@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# Print 'yes' as input if you want to destroy snapshots, no to not destroy
+# Run zfs-rollback-all.sh pre-update-2016-12-22-184519 yes
+
+snap=${1}
+destructive=${2}
+
+echo "ROLLING BACK: ${ds}";
+echo
+
+if [ "${destructive}" == "yes" ]; then
+  echo "Destroying multiple snapshots"
+
+  for ds in $(zfs list -H -o name); do
+    echo "Rolling back: '${ds}@${snap}'"
+    zfs rollback -r "${ds}@${snap}"
+  done
+elif [ "${destructive}" == "no" ]; then
+  echo "Doing a non-destructive rollback"
+  for ds in $(zfs list -H -o name); do
+    echo "Rolling back: '${ds}@${snap}'"
+    zfs rollback "${ds}@${snap}"
+  done
+else
+  echo "No comprende"
+fi

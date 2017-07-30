@@ -11,5 +11,6 @@
 !/.local/scripts/screenshot
 !/.local/scripts/shellec/shellec
 !/.local/scripts/startvm
+!/.local/scripts/zfs-rollback-all
 !/.local/share/applications/kit.desktop
 !/.local/share/icons/hicolor/512x512/apps/gitkraken.png

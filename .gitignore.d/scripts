@@ -19,6 +19,7 @@
 !/.local/scripts/startvm
 !/.local/scripts/zfs-rollback-all
 !/.local/scripts/znapcfg
+!/.local/scripts/znap_check_dataset
 !/.local/share
 !/.local/share/applications
 !/.local/share/applications/kit.desktop

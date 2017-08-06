@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Pre zapzendzetup script. Put in ~/znap_check_dataset on remote and 
+run with
+
+ds="${1}"
+
+if [ "$(zfs list -H -o name "${ds}")" = "${ds}" ]; then
+  echo "${ds} exists, running ZnapZend."
+else
+  echo "Creating non-existant dataset ${ds}"
+  zfs create -p "${ds}"
+  zfs unmount "${ds}"
+  echo "${ds} created, running ZnapZend."
+fi

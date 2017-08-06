@@ -1,0 +1,26 @@
+#!/bin/sh
+
+REMOTE_POOL_ROOT="${1}"
+REMOTE_USER="${2}"
+REMOTE_IP="${3}"
+
+for ds in $(zfs list -H -o name | \
+    grep -E 'data/|default|john/|usr/|var/|lib/' | \
+    grep -v cache); do
+  echo "Creating: ${REMOTE_USER}@${REMOTE_IP}:${REMOTE_POOL_ROOT}/${ds}"
+
+  ssh ${REMOTE_USER}@${REMOTE_IP} \
+    "if [ $(zfs list -H -o name \"${ds}\") != \"${ds}\" ]; then \
+      echo \"Creating non-existant dataset ${ds}\";
+      #zfs create -p \"${ds}\" \
+      echo \"Creating non-existant dataset ${ds}\"; \
+      echo \"${ds} created, running ZnapZend.\"; \
+    else \
+      echo \"${ds} exists, running ZnapZend.\"; \
+    fi"
+
+#  znapzendzetup create --tsformat='%Y-%m-%d-%H%M%S' \
+#  SRC '1d=>15min,7d=>1h,30d=>4h,90d=>1d' ${ds} \
+#  DST:${REMOTE_IP} '1d=>15min,7d=>1h,30d=>4h,90d=>1d,1y=>1w,10y=>1month' \
+#  "${REMOTE_USER}@${REMOTE_IP}:${REMOTE_POOL_ROOT}/${ds}"
+done

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+GPU_FORCE_64BIT_PTR=0
+GPU_MAX_HEAP_SIZE=90
+GPU_USE_SYNC_OBJECTS=1
+GPU_MAX_ALLOC_PERCENT=90
+GPU_SINGLE_ALLOC_PERCENT=90
+ethminer --farm-recheck 200 -G -S us2.ethermine.org:4444 -FS us1.ethermine.org:4444 -O 0x8e0ad6cb7c933808b87d3f70ce425fbaef61bdbd.chin

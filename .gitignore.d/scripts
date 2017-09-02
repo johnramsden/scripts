@@ -6,6 +6,7 @@
 !/.local/bin/createtag
 !/.local/bin/quickcrypt
 !/.local/bin/shellec
+!/.local/bin/startmining
 !/.local/bin/startvm
 !/.local/scripts
 !/.local/scripts/createtag
@@ -16,6 +17,7 @@
 !/.local/scripts/screenshot
 !/.local/scripts/shellec
 !/.local/scripts/shellec/shellec
+!/.local/scripts/startmining
 !/.local/scripts/startvm
 !/.local/scripts/zfs-rollback-all
 !/.local/scripts/znapcfg

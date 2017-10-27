@@ -10,6 +10,7 @@
 !/.local/bin/startvm
 !/.local/scripts
 !/.local/scripts/createtag
+!/.local/scripts/makewallpaper
 !/.local/scripts/quickcrypt
 !/.local/scripts/quickcrypt/quickcrypt
 !/.local/scripts/replace-and-reboot

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Create wallpaper from main background color
+# https://linux.pictures/wallpaper
+# Requires ImageMagick
+
+display_usage() {
+    echo -e "\nUsage: <scriptname> -f <source file> -r <your screen resolution>"
+    echo -e "\nExample:./makemywall.sh -f coolimage.png -r 1920x1080"
+    }
+
+if [  $# -le 1 ]
+    then
+        display_usage
+        exit 1
+    fi
+if [[ ( $# == "--help") ||  $# == "-h" ]]
+    then
+        display_usage
+        exit 0
+    fi
+
+while getopts f:r: option
+    do
+        case "${option}"
+            in
+            f) inpfile=${OPTARG};;
+            r) res=${OPTARG};;
+        esac
+    done
+
+scaling=$((`echo "$res" | sed 's/.*x//'`/2))
+
+bgrcolor=`convert $inpfile -format %c +dither -depth 5  histogram:info: | sort -n | tail -1 | sed -r 's/^.*(#[0-9A-F]{6}).*/\1/'`
+
+convert $inpfile -gravity center -resize $scaling -background $bgrcolor -extent $res wallpaper-$res-$inpfile

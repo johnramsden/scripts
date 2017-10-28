@@ -1,0 +1,12 @@
+#!/bin/sh
+
+prefix=${1}
+renamefile=${2:-y}
+
+find . -type f -name "${prefix}*" | while read FILE ; do
+  newfile="$(echo ${FILE} | sed -e "s/${prefix}//")";
+  echo "RANAMED: ${FILE} -> ${newfile}" ; 
+  if [ "${renamefile}" == "y" ]; then
+    git mv "${FILE}" "${newfile}" ;
+  fi
+done

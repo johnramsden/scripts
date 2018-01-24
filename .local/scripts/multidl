@@ -1,0 +1,54 @@
+#!/bin/sh
+
+# Written by John Ramsden, 2018 < johnramsden [at] riseup [dot] net >
+
+# Download multiple files at once with wget using only bourne shell
+
+dl(){
+  echo "Downloading ""'""${1}""'"" from ""'""${2}""'"
+  wget -O "${1}" "${2}" &
+}
+
+usage(){
+  echo
+  echo "------------------------"
+  echo "Download multiple files at once with wget using only bourne shell"
+  echo
+  echo "usage:"
+  echo "multidl -n "<name>,<url>" [-n "<name>,<url>" ]
+}
+
+darray=""
+narray=""
+
+while getopts ":hn:" opt; do
+    case $opt in
+        n ) 
+            if [ -z "${narray}" ]; then
+              narray="${OPTARG}"
+            else
+              narray="${narray};${OPTARG}"
+            fi
+            ;;
+        * ) usage
+            exit 1
+    esac
+done
+
+while [ "${narray}" ] ;do
+  iter=${narray%%;*}
+  [ "${narray}" = "$iter" ] && narray='' || narray="${narray#*;}"
+
+  first="${iter%%,*}"; iter="${iter#*,}"
+  second="${iter%%,*}"
+  
+  echo
+  echo "------------------------"
+  echo "Name: ${first}"
+  echo "URL: ${second}"
+
+  echo
+
+  dl "${first}" "${second}"
+
+done

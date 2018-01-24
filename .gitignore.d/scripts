@@ -4,6 +4,7 @@
 !/.local
 !/.local/bin
 !/.local/bin/createtag
+!/.local/bin/multidl
 !/.local/bin/quickcrypt
 !/.local/bin/shellec
 !/.local/bin/startmining
@@ -12,6 +13,7 @@
 !/.local/scripts/createtag
 !/.local/scripts/gitrenameprefix
 !/.local/scripts/makewallpaper
+!/.local/scripts/multidl
 !/.local/scripts/quickcrypt
 !/.local/scripts/quickcrypt/quickcrypt
 !/.local/scripts/replace-and-reboot

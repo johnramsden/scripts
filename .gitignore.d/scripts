@@ -1,7 +1,6 @@
 *
 !/.gitignore.d
 !/.gitignore.d/scripts
-!/.local
 !/.local/bin
 !/.local/bin/createtag
 !/.local/bin/multidl
@@ -26,7 +25,6 @@
 !/.local/scripts/zfs-rollback-all
 !/.local/scripts/znapcfg
 !/.local/scripts/znap_check_dataset
-!/.local/share
 !/.local/share/applications
 !/.local/share/applications/kit.desktop
 !/.local/share/icons

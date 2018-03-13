@@ -18,6 +18,8 @@
 !/.local/scripts/replace-and-reboot
 !/.local/scripts/replaceboot
 !/.local/scripts/screenshot
+!/.local/scripts/server
+!/.local/scripts/server/seedboxsync.sh
 !/.local/scripts/shellec
 !/.local/scripts/shellec/shellec
 !/.local/scripts/startmining
@@ -25,10 +27,5 @@
 !/.local/scripts/zfs-rollback-all
 !/.local/scripts/znapcfg
 !/.local/scripts/znap_check_dataset
-!/.local/share/applications
 !/.local/share/applications/kit.desktop
-!/.local/share/icons
-!/.local/share/icons/hicolor
-!/.local/share/icons/hicolor/512x512
-!/.local/share/icons/hicolor/512x512/apps
 !/.local/share/icons/hicolor/512x512/apps/gitkraken.png

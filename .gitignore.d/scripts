@@ -1,6 +1,7 @@
 *
 !/.gitignore.d
 !/.gitignore.d/scripts
+!/.local
 !/.local/bin
 !/.local/bin/createtag
 !/.local/bin/multidl
@@ -27,5 +28,9 @@
 !/.local/scripts/zfs-rollback-all
 !/.local/scripts/znapcfg
 !/.local/scripts/znap_check_dataset
+
+!/.local/scripts/templates
+!/.local/scripts/templates/duplicitybak
+
 !/.local/share/applications/kit.desktop
 !/.local/share/icons/hicolor/512x512/apps/gitkraken.png

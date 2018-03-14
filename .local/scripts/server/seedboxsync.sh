@@ -24,8 +24,11 @@ seedbox_pull_seeding() {
             --verbose \
             --delete \
             -og --chown=${FILES_OWNER}:${FILES_GROUP} \
-            "${SEEDBOX_USER}@${SEEDBOX_SERVER}:${remote_source}/" "${local_destination}" || \
-      echo "rsync ${remote_source} had no changes" && return 1
+            "${SEEDBOX_USER}@${SEEDBOX_SERVER}:${remote_source}/" "${local_destination}"
+
+      if [ ${?} -ne 0 ]; then
+            echo "rsync ${remote_source} had no changes" && return 1
+      fi
 
       echo
       echo "rsync ${remote_source} seccessful from ${SEEDBOX_USER}@${SEEDBOX_SERVER}"
@@ -35,6 +38,10 @@ seedbox_pull_seeding() {
       rsync --recursive \
             -og --chown=${FILES_OWNER}:${FILES_GROUP} \
             "${local_destination}/" "${COMPLETED_SYNC_LOCATION}"
+
+      if [ ${?} -ne 0 ]; then
+            echo "Failed moving files to ${COMPLETED_SYNC_LOCATION}" && return 1
+      fi      
 }
 
 seedbox_pull_downloaded() {
@@ -50,8 +57,11 @@ seedbox_pull_downloaded() {
             --delete \
             -og --chown=${FILES_OWNER}:${FILES_GROUP} \
             --remove-source-files \
-            "${SEEDBOX_USER}@${SEEDBOX_SERVER}:${remote_source}" "${local_destination}/${SYNC_TIMESTAMP}" || \
-      echo "rsync ${SYNC_TIMESTAMP} failed" && return 1
+            "${SEEDBOX_USER}@${SEEDBOX_SERVER}:${remote_source}" "${local_destination}/${SYNC_TIMESTAMP}"
+
+      if [ ${?} -ne 0 ]; then
+            echo "rsync ${SYNC_TIMESTAMP} failed" && return 1
+      fi      
 
       echo
       echo "rsync ${SYNC_TIMESTAMP} seccessful from ${SEEDBOX_USER}@${SEEDBOX_SERVER}"
@@ -62,8 +72,12 @@ seedbox_pull_downloaded() {
             --recursive \
             -og --chown=${FILES_OWNER}:${FILES_GROUP} \
             "${SYNC_LOCATION}/${SYNC_TIMESTAMP}/" ${COMPLETED_SYNC_LOCATION} && \
-      rm -rf "${SYNC_LOCATION:?}/${SYNC_TIMESTAMP:?}" || \
-      echo "Failed moving ${SYNC_LOCATION}/${SYNC_TIMESTAMP}/" && return 1
+      rm -rf "${SYNC_LOCATION:?}/${SYNC_TIMESTAMP:?}"
+
+      if [ ${?} -ne 0 ]; then
+            echo "Failed moving ${SYNC_LOCATION}/${SYNC_TIMESTAMP}/" && return 1
+      fi      
+     
 }
 
 # Pull downloaded or downloaded seeding files

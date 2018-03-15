@@ -21,17 +21,17 @@
 !/.local/scripts/replaceboot
 !/.local/scripts/screenshot
 !/.local/scripts/server
+!/.local/scripts/server/backupcfg.sh
 !/.local/scripts/server/seedboxsync.sh
 !/.local/scripts/shellec
 !/.local/scripts/shellec/shellec
 !/.local/scripts/startmining
 !/.local/scripts/startvm
+!/.local/scripts/templates
+!/.local/scripts/templates/duplicitybak
 !/.local/scripts/zfs-rollback-all
 !/.local/scripts/znapcfg
 !/.local/scripts/znap_check_dataset
-
-!/.local/scripts/templates
-!/.local/scripts/templates/duplicitybak
 
 !/.local/share/applications/kit.desktop
 !/.local/share/icons/hicolor/512x512/apps/gitkraken.png

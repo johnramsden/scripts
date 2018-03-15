@@ -1,7 +1,7 @@
 *
-!/.gitignore.d
+
 !/.gitignore.d/scripts
-!/.local
+
 !/.local/bin
 !/.local/bin/createtag
 !/.local/bin/multidl
@@ -9,6 +9,7 @@
 !/.local/bin/shellec
 !/.local/bin/startmining
 !/.local/bin/startvm
+
 !/.local/scripts
 !/.local/scripts/createtag
 !/.local/scripts/gitrenameprefix

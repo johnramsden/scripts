@@ -20,7 +20,7 @@ seedbox_pull_downloaded() {
       remote_source="${1}"
       local_destination="${2}"
 
-      mkdir -p ${local_destination}/${sync_timestamp} && chown ${FILES_OWNER}:${FILES_GROUP} ${local_destination}/${sync_timestamp}
+      mkdir -p "${local_destination}/${sync_timestamp}" && chown ${FILES_OWNER}:${FILES_GROUP} "${local_destination}/${sync_timestamp}"
 
       /usr/bin/lockf -s -t 0 -k "${local_destination}/${sync_timestamp}" \
             /usr/local/bin/rsync \

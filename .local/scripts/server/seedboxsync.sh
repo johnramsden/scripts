@@ -4,6 +4,7 @@ SEEDBOX_USER="cacheline"
 SEEDBOX_SERVER="polyphemus.feralhosting.com"
 
 SEEDBOX_DELUGE_ROOT="/media/sdl1/cacheline/private/deluge"
+SEEDBOX_TEMP_TRANSFER_ROOT="/media/sdl1/cacheline/private/transfer"
 
 SEEDBOX_SEEDING_DIR="complete/seeding"
 SEEDBOX_DOWNLOADING_DIR="complete/downloading"
@@ -14,33 +15,57 @@ COMPLETED_SYNC_LOCATION="/mnt/tank/media/Downloads/Complete/downloading"
 FILES_OWNER="media"
 FILES_GROUP="media"
 
+ssh_command(){
+      OUTPUT=$(ssh "${SEEDBOX_USER}@${SEEDBOX_SERVER}" "${1}")
+      echo "${OUTPUT}"
+      return ${?}
+}
+
+move_to_temp(){
+      remote_source="${1}"
+      remote_tempdir="${2}"
+
+      ssh_command "mkdir -p ${remote_tempdir}" && ssh_command "mv ${remote_source}/"'*'" ${remote_tempdir}"
+      return ${?}
+}
+
 seedbox_pull_downloaded() {
       sync_timestamp="$(date "+%F_%H_%M_%S" )"
+      day_date="$(date +%F)"
 
       remote_source="${1}"
       local_destination="${2}"
 
-      mkdir -p "${local_destination}/${sync_timestamp}" && chown ${FILES_OWNER}:${FILES_GROUP} "${local_destination}/${sync_timestamp}"
+      remote_temp_directory="${SEEDBOX_TEMP_TRANSFER_ROOT}/${day_date}/${sync_timestamp}"
 
-      /usr/bin/lockf -s -t 0 -k "${local_destination}/${sync_timestamp}" \
-            /usr/local/bin/rsync \
-                  --times \
-                  --verbose \
-                  --compress \
-                  --recursive \
-                  --human-readable \
-                  --remove-source-files \
-                  -og --chown=${FILES_OWNER}:${FILES_GROUP} \
-                        "${SEEDBOX_USER}@${SEEDBOX_SERVER}:${remote_source}" "${local_destination}/${sync_timestamp}"
+      if move_to_temp "${remote_source}" "${remote_temp_directory}"; then
+            mkdir -p "${local_destination}/${sync_timestamp}" && \
+            chown ${FILES_OWNER}:${FILES_GROUP} "${local_destination}/${sync_timestamp}" && \
+            /usr/bin/lockf -s -t 0 -k "${local_destination}/${sync_timestamp}" \
+                  /usr/local/bin/rsync \
+                        --times \
+                        --verbose \
+                        --compress \
+                        --recursive \
+                        --human-readable \
+                        -og --chown=${FILES_OWNER}:${FILES_GROUP} \
+                              "${SEEDBOX_USER}@${SEEDBOX_SERVER}:${remote_temp_directory}" "${local_destination}/${sync_timestamp}"
 
-      if [ ${?} -ne 0 ]; then
-            echo "rsync ${sync_timestamp} failed" && return 1
-      fi      
+            if [ ${?} -ne 0 ]; then
+                  echo "rsync ${sync_timestamp} failed" && return 1
+            fi
 
-      echo
-      echo "rsync ${remote_source} --> ${local_destination}/${sync_timestamp} successful from ${SEEDBOX_USER}@${SEEDBOX_SERVER}"
-      echo
-
+            echo "Transfer successful, deleting tempdir ${remote_temp_directory} on remote"
+            ssh_command "ls ${SEEDBOX_TEMP_TRANSFER_ROOT}/${day_date}/${sync_timestamp}"
+            if [ ${?} -ne 0 ]; then
+                  echo "Deleting ${SEEDBOX_TEMP_TRANSFER_ROOT}/${day_date}/${sync_timestamp} failed"
+            fi
+            
+            echo
+            echo "rsync ${remote_source} --> ${local_destination}/${sync_timestamp} successful from ${SEEDBOX_USER}@${SEEDBOX_SERVER}"
+            echo
+      fi
+      
       return 0     
 }
 

@@ -17,15 +17,16 @@ FILES_GROUP="media"
 
 ssh_command(){
       OUTPUT=$(ssh "${SEEDBOX_USER}@${SEEDBOX_SERVER}" "${1}")
+      return_val="${?}"
       echo "${OUTPUT}"
-      return ${?}
+      return "${return_val}"
 }
 
 move_to_temp(){
       remote_source="${1}"
       remote_tempdir="${2}"
 
-      ssh_command "mkdir -p ${remote_tempdir}" && ssh_command "mv ${remote_source}/"'*'" ${remote_tempdir}"
+      ssh_command "mkdir -p ${remote_tempdir} && mv """""${remote_source}'*'""""" ${remote_tempdir}"
       return ${?}
 }
 
@@ -35,6 +36,19 @@ seedbox_pull_downloaded() {
 
       remote_source="${1}"
       local_destination="${2}"
+
+      ssh_command "[ -d ${remote_source} ]"
+
+      # Check remote dir exists, and isn't empty
+      if ! [ "${?}" -eq 0 ]; then
+            echo "Remote directory ${remote_source} doesn't exist"; 
+            return 1
+      fi
+
+      if [ -z "$(ssh_command "ls -A ${remote_source}")" ]; then
+            echo "Remote ${remote_source} is empty, skipping sync"; 
+            return 0
+      fi
 
       remote_temp_directory="${SEEDBOX_TEMP_TRANSFER_ROOT}/${day_date}/${sync_timestamp}"
 
@@ -56,7 +70,7 @@ seedbox_pull_downloaded() {
             fi
 
             echo "Transfer successful, deleting tempdir ${remote_temp_directory} on remote"
-            ssh_command "ls ${SEEDBOX_TEMP_TRANSFER_ROOT}/${day_date}/${sync_timestamp}"
+            ssh_command "rm -rf ${SEEDBOX_TEMP_TRANSFER_ROOT}/${day_date}/${sync_timestamp}"
             if [ ${?} -ne 0 ]; then
                   echo "Deleting ${SEEDBOX_TEMP_TRANSFER_ROOT}/${day_date}/${sync_timestamp} failed"
             fi

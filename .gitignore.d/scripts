@@ -13,6 +13,7 @@
 !/.local/scripts
 !/.local/scripts/createtag
 !/.local/scripts/gitrenameprefix
+!/.local/scripts/gcrepos
 !/.local/scripts/makewallpaper
 !/.local/scripts/multidl
 !/.local/scripts/quickcrypt

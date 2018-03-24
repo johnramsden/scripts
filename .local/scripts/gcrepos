@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Run git garbage collector an all descendent git subdirectories
+
+find . -name .git -type d -prune | while read d; do
+    pushd $d
+    echo "Running gc on: $PWD" 
+    git count-objects
+    git gc
+    echo
+    popd
+done

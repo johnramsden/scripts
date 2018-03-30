@@ -114,11 +114,9 @@ seedbox_pull_downloaded() {
       fi
       
       echo "Cleaning up old directories under ${SEEDBOX_TEMP_TRANSFER_ROOT}"
-      if ! ssh_command \
-      "find """""${SEEDBOX_TEMP_TRANSFER_ROOT}/'*'""""" -maxdepth 0 -type d -not -name ${day_date} -exec rm -rv {} + ;"; then
-            echo "Deleting ${SEEDBOX_TEMP_TRANSFER_ROOT}/* failed"
-            echo
-            return 1
+      if ! [ -z "$(ssh_command "ls -A ${SEEDBOX_TEMP_TRANSFER_ROOT}")" ]; then
+      ssh_command \
+      "find """""${SEEDBOX_TEMP_TRANSFER_ROOT}/'*'""""" -maxdepth 0 -type d -not -name ${day_date} -exec rm -rv {} + ;"
       fi
 
       return 0     

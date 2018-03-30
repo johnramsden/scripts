@@ -1,9 +1,0 @@
-#!/usr/bin/env xdg-open
-[Desktop Entry]
-Encoding=UTF-8
-Version=1.0
-Name=Kit
-Comment=Starts the Virtual machine Kit
-Type=Application
-Exec=/home/john/.local/bin/startvm kit
-Icon=audio-input-microphone

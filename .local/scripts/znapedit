@@ -1,0 +1,10 @@
+#!/bin/sh
+
+for ds in $(zfs list -H -o name | \
+    grep -E 'data/|default|john|usr/|var/|lib/' | \
+    grep -Ev 'zpool|cache|coredump|Media'); do
+
+  echo "Editing: ${ds}"
+
+  EDITOR=nano znapzendzetup edit "${ds}"
+done

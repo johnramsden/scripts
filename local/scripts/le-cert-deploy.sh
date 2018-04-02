@@ -1,15 +1,14 @@
 #!/bin/sh
 
+# Cloudflare account details CF_Email, CF_Key
+. "/mnt/tank/system/scripts/local/secrets/le-cert-deploy.auth"
+
 # letsencrypt Jail
 le_jail="letsencrypt"
 le_user="acme"
 
 cert_db="/mnt/tank/data/database/letsencrypt/certs"
 jail_db="/mnt/tank/data/database"
-
-# Cloudflare account
-export CF_Email=""
-export CF_Key=""
 
 ############# MAIN CODE #############
 

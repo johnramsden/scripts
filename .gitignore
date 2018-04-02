@@ -1,1 +1,2 @@
-local/scripts/secrets
+local/secrets
+*.auth

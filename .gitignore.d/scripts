@@ -13,6 +13,7 @@
 !/.local/bin/startmining
 !/.local/bin/startvm
 
+!/.local/scripts/restartplasma.sh 
 !/.local/scripts/createtag
 !/.local/scripts/duplicitybak
 !/.local/scripts/gcrepos

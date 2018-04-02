@@ -109,7 +109,7 @@ seedbox_pull_downloaded() {
             echo
                        
             echo "Moved synced files to destination -->"
-            echo "${local_sync_root}/${sync_timestamp}-extracted"
+            echo "${PROCESSING_LOCATION}/${sync_timestamp}-extracted"
             echo
       fi
       

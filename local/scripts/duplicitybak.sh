@@ -3,7 +3,7 @@
 # on arch install duplicity, python2-boto
 
 # Place auth variables: PASSPHRASE, GS_ACCESS_KEY_ID, GS_SECRET_ACCESS_KEY
-. "/mnt/tank/system/scripts/local/secrets/duplicitybak.auth"
+. "/mnt/tank/system/local/secrets/duplicitybak.auth"
 
 # Folders to backup
 BACKUP_DATA_REGEXP='Workspace|Computer|Personal|Pictures|University'

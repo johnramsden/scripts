@@ -2,15 +2,15 @@
 
 # startvm:
 # John Ramsden, 2017
-# Start a libvirt qemu://system virtual machine
+# Start a libvirt qemu://session virtual machine
 
 vm=${1}
 
-off=$(virsh -c qemu:///system list --all | grep " ${vm} " | awk '{ print $3}') ;
+off=$(virsh -c qemu:///session list --all | grep " ${vm} " | awk '{ print $3}') ;
 
 if ([ "x$off"=="x" ] || [ "x$off" != "xrunning" ]); then
   echo "Starting ${vm}";
-  virsh -c qemu:///system start ${vm};
+  virsh -c qemu:///session start ${vm};
   spicy --host=localhost --port=5900;
 else
   echo "${vm} is already running";

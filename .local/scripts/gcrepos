@@ -6,7 +6,9 @@ find . -name .git -type d -prune | while read d; do
     pushd $d
     echo "Running gc on: $PWD" 
     git count-objects
-    git gc
+#    git gc
+    # Extreme gc
+    git repack -a -d -f --depth=250 --window=250
     echo
     popd
 done

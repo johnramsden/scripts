@@ -26,7 +26,8 @@ check_if_pod_match(){
 
 # Transfer any MP3s matching and removed their parent directories if empty
 transfer_downloaded_podcast(){
-    find "${1}" -type f -name '*.mp3' | while IFS= read -r pod_to_transfer; do
+    find "${1}" -type f -name '*.mp3' | \
+    while IFS= read -r pod_to_transfer; do
         echo "Transferring ${pod_to_transfer}"
         install -v -m 770 -o ${POD_USER} -g ${POD_GROUP} "${pod_to_transfer}" "${2}" && \
         rm "${pod_to_transfer}"
@@ -54,8 +55,9 @@ move_podcasts(){
                 pod_dst_no_space=$(echo "${pod_dst_tmp}" | sed -e 's#.*/##' -e 's/ //g')
                 if [ "${pod_dst_no_space}" = "${pod_name}" ]; then
                     echo "Found match for ${pod_name}"
-                    transfer_downloaded_podcast "${line}" "${pod_dst_tmp}" || \
-                    echo "Failed to transfer ${pod_name}" && exit 1
+                    if ! transfer_downloaded_podcast "${line}" "${pod_dst_tmp}"; then
+                        echo "Failed to transfer ${pod_name}" && exit 1
+                    fi
                 fi
             done
 

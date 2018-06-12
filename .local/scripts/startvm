@@ -2,18 +2,28 @@
 
 # startvm:
 # John Ramsden, 2017
-# Start a libvirt qemu://session virtual machine
+# Start a libvirt qemu virtual machine and connect to spice server
 
 vm=${1}
 port=${2:-5900}
+session_type=${3:-system}
+network=${4:-default}
 
-off=$(virsh -c qemu:///session list --all | grep " ${vm} " | awk '{ print $3}') ;
+off=$(virsh -c qemu:///"${session_type}" list --all | grep "${vm} " | awk '{ print $3}') ;
 
-if ([ "x$off"=="x" ] || [ "x$off" != "xrunning" ]); then
+if [ "x${session_type}" = "xsystem" ]; then
+  net_running=$(virsh -c qemu:///"${session_type}" net-list --all | grep "${network}" | awk '{ print $2}')
+  if [ "x${net_running}" = "x" ] || [ "x${net_running}" = "xinactive" ]; then
+    virsh -c qemu:///"${session_type}" net-start "${network}"
+    echo "Starting network ${network}"
+  fi
+fi
+
+if [ "x$off" = "x" ] || [ "x$off" != "xrunning" ]; then
   echo "Starting ${vm}";
-  virsh -c qemu:///session start ${vm};
+  virsh -c qemu:///"${session_type}" start "${vm}";
   spicy --host=localhost --port="${port}";
 else
   echo "${vm} is already running";
-  spicy --host=localhost --port="${port}";
+  spicy --host="${session_type}" --port="${port}";
 fi

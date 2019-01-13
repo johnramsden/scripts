@@ -16,6 +16,8 @@ PROCESSING_LOCATION="/mnt/tank/media/Downloads/Complete/processing"
 FILES_OWNER="media"
 FILES_GROUP="media"
 
+time_sleep="150"
+
 ssh_command(){
     OUTPUT=$(ssh "${SEEDBOX_USER}@${SEEDBOX_SERVER}" "${1}")
     return_val="${?}"
@@ -77,8 +79,8 @@ check_for_unfinished() {
         
         mkdir -p "${pull_location}" || return 1
 
-        for i in 1 2 3; do
-            /usr/bin/lockf -s -t 0 -k "${pull_location}" && \
+        for i in 1 2 3 4 5; do
+            /usr/bin/lockf -s -t 0 -k "${pull_location}" \
             /usr/local/bin/rsync \
                 --times \
                 --delete \
@@ -92,8 +94,12 @@ check_for_unfinished() {
             if [ ${s} -eq 0 ]; then
                 break
             fi
-            echo "Rsync attempt ${i} broke retrying in 150 seconds..."
-            sleep 150;
+            echo "Rsync attempt ${i} broke"
+            if [ ${i} -ne 5 ]; then
+                sleep "${time_sleep}";
+                time_sleep=$((time_sleep * 2))
+                echo "retrying in ${time_sleep} seconds..."
+            fi
         done
         
         if [ ${s} -ne 0 ]; then
@@ -135,7 +141,7 @@ seedbox_pull_downloads() {
         fi
         
         mkdir -p "${local_temp_root}" || return 1
-        for i in 1 2 3; do
+        for i in 1 2 3 4 5; do
             /usr/bin/lockf -s -t 0 -k "${local_temp_root}" \
             /usr/local/bin/rsync \
                 --times \
@@ -152,8 +158,12 @@ seedbox_pull_downloads() {
                 break
             fi
 
-            echo "Rsync attempt ${i} broke retrying in 150 seconds..."
-            sleep 150;
+            echo "Rsync attempt ${i} broke"
+            if [ ${i} -ne 5 ]; then
+                sleep "${time_sleep}";
+                time_sleep=$((time_sleep * 2))
+                echo "retrying in ${time_sleep} seconds..."
+            fi
             
         done
 
